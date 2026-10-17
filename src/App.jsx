@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import AgentsHub from "./AgentsHub.jsx";
 import ATSAgent from "./ATSAgent.jsx";
 import LinkedInStudio from "./LinkedInStudio.jsx";
 import TravelPlanner from "./TravelPlanner.jsx";
 import SupportChatWidget from "./components/SupportChatWidget.tsx";
+import FinancialAgent from "./FinancialAgent.jsx";
+import PDFEditorAgent from "./PDFEditorAgent.jsx";
 
 const EMAIL = "rashid.mhd.pp@gmail.com";
 const ALT_EMAIL = "muhammerashid12345@gmail.com";
@@ -317,13 +319,16 @@ function Contact() {
 }
 
 export default function App() {
+  const [financeOpen, setFinanceOpen] = useState(false);
+  const [pdfOpen, setPdfOpen] = useState(false);
+  const closeFinance = useCallback(() => setFinanceOpen(false), []);
   return (
     <>
       <Header />
       <main>
         <Hero />
         <Work />
-        <AgentsHub />
+        <AgentsHub onOpenFinance={() => setFinanceOpen(true)} onOpenPdf={() => setPdfOpen(true)} />
         <ATSAgent />
         <LinkedInStudio />
         <TravelPlanner />
@@ -337,6 +342,8 @@ export default function App() {
         <Contact />
       </main>
       <SupportChatWidget />
+      {financeOpen && <FinancialAgent onClose={closeFinance} />}
+      {pdfOpen && <PDFEditorAgent onClose={() => setPdfOpen(false)} />}
     </>
   );
 }

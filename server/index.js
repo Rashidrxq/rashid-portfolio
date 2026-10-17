@@ -7,6 +7,8 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { buildKnowledgeIndex, retrieve } from "./rag/index.js";
 import { createItineraryRouter } from "./travel/itinerary.js";
+import { createFinanceAssistantRouter } from "./finance/assistant.js";
+import { createPdfAssistantRouter } from "./pdf/assistant.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(HERE, "..");
@@ -79,6 +81,14 @@ function verifySameOrigin(request, response, next) {
 }
 
 app.use("/api/itinerary", createItineraryRouter({
+  getApiKey: () => process.env.OPENROUTER_API_KEY?.trim(),
+  verifySameOrigin,
+}));
+app.use("/api/finance", createFinanceAssistantRouter({
+  getApiKey: () => process.env.OPENROUTER_API_KEY?.trim(),
+  verifySameOrigin,
+}));
+app.use("/api/pdf", createPdfAssistantRouter({
   getApiKey: () => process.env.OPENROUTER_API_KEY?.trim(),
   verifySameOrigin,
 }));

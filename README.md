@@ -69,3 +69,21 @@ Keep documentation factual and current. Do not add confidential details, credent
 ## Existing portfolio tools
 
 The ATS checker extracts and scans resume text in the browser. The LinkedIn Studio uses a manual ChatGPT handoff. The Travel Planner offers an optional user-triggered free Gemma itinerary and a generic local draft. Neither mode provides verified live travel information. Their descriptions and limitations are included in the portfolio demo knowledge notes.
+
+## Financial AI Agent
+
+The Agents section includes an educational personal budgeting workspace. Add, edit, search, filter, sort, and remove income or expense entries; create monthly overall or category budgets; and review locally calculated balance, savings rate, category totals, six-month trend, and budget progress. No sample transactions are preloaded. Calculations and charts are derived in the browser from the records you enter.
+
+Finance entries and budgets are stored in this browser's `localStorage`. They are not encrypted, backed up, or synchronized, and anyone with access to this browser profile may be able to view them. Avoid entering account numbers or other sensitive identifiers. Clearing this site's browser data deletes the local ledger.
+
+Optional finance AI is user-triggered from the Assistant tab. Local calculation answers remain available if the provider is unavailable. When submitted, the question and a compact month summary (income, expenses, balance, savings rate, and up to eight category totals) are sent through Express to the fixed OpenRouter free model `google/gemma-4-26b-a4b-it:free`; individual transaction descriptions and entries are not sent. The server reads `OPENROUTER_API_KEY` only from its environment/ignored `.env`, disables provider fallbacks, and never sends the key to the browser. AI text is explanatory and may be wrong; code-computed ledger values remain the source of truth. This demo is not regulated financial advice and does not offer investment, credit, or payment services.
+
+The finance endpoint is `/api/finance/ask`; its status endpoint is `/api/finance/status`. Configure the key using the existing OpenRouter setup above. Finance AI has a small per-IP rate limit; errors leave local tracking and calculations usable.
+
+## AI PDF Editor
+
+The Agents section opens a responsive, client-side PDF editor. It accepts PDFs up to 10 MB and 35 pages, renders pages and extracts available text with PDF.js, and keeps the original bytes in browser memory. Add and position text, shapes, highlights, lines, and PNG/JPEG images; reorder, rotate, duplicate, or remove pages; then export overlays as page content. The export is reopened in PDF.js to validate its page count before download. Download the unchanged source separately at any time.
+
+PDF source text cannot be safely replaced in place in this prototype. **Cover & Replace** creates a visual cover and editable replacement; old text may remain extractable, so this is not secure redaction. OCR is not included; scanned pages can still be marked up and exported. Edited exports can lose interactive forms, bookmarks, and some metadata. Editing is local in the browser.
+
+The optional AI assistant is an explicit action. It sends only selected overlay text or extracted text from the current page (up to 4,000 characters), chosen task, and question (up to 700 characters) through Express to OpenRouter's fixed free Gemma model. It never uploads the PDF bytes and does not use paid model fallback. Review and apply proposals manually. OpenRouter availability/rate limits can prevent a response; local editing remains available. The status endpoint is `/api/pdf/status` and the assistant endpoint is `/api/pdf/assistant`.
